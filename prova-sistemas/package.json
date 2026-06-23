@@ -1,0 +1,30 @@
+{
+  "name": "prova-sistemas",
+  "version": "1.0.0",
+  "description": "A project management system built with Node.js, Express, and PostgreSQL.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed:all",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sequelize": "^6.6.5",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "jsonwebtoken": "^8.5.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "sequelize-cli": "^6.2.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

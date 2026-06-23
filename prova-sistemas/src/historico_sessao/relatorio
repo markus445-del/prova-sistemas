@@ -1,0 +1,30 @@
+# Relatório de Sessão
+Data: 2026-06-22
+
+Resumo das ações executadas
+- Análise do Dockerfile atual:
+  - Arquivo existente: prova-sistemas/Dockerfile (usa node:14, multi-stage).
+  - Problemas identificados: versão Node incorreta (deve ser 24+), não usa imagem Alpine no runtime, expõe porta 3000, falta .dockerignore e otimizações de cache/instalação.
+- Criação de pasta para relatórios:
+  - pasta criada: prova-sistemas/reports
+  - arquivo README.md inicial adicionado em reports.
+- Arquivo Nginx presente em: prova-sistemas/nginx/nginx.conf
+  - Configuração básica de proxy para `app:3000` com tratamento de / e /api.
+  - Observação: Nginx deve ficar na rede frontend_net e ser a única exposição externa na porta 80 (regras do projeto).
+- Requisitos ainda pendentes / próximos passos recomendados:
+  1. Atualizar Dockerfile para Node 24+ com multi-stage e runtime baseado em node:24-alpine, otimizado com cache e npm ci, .dockerignore e usuário não-root.
+  2. Criar docker-compose.yml com duas redes: frontend_net (nginx + app) e backend_net (app + postgres + redis). Postgres e Redis NÃO devem ter `ports` expostas; usar named volumes para ambos.
+  3. Implementar Sequelize (config, migrations, seeders) com 4 tabelas: Users (index B-Tree em email), Projects, Tasks (index B-Tree em project_id), User_Projects (pivot).
+  4. Implementar autenticação JWT e middleware que proteja todas as rotas exceto POST /login.
+  5. Implementar CRUDs (Users, Projects, Tasks) e rota /api-docs para Swagger.
+  6. Criar `command.js` para executar migrations e seeds via CLI (ex: `node command.js migrate` e `node command.js seed`).
+  7. Preparar seed automático para popular dados após migrations quando subir com `docker compose up --build`.
+- Comandos sugeridos para aplicar este relatório ao workspace (execute no terminal do projeto):
+  - Cria diretório e grava este relatório:
+    mkdir -p /home/faat/prova-sistemas/prova-sistemas/src/historico_sessao
+    cat > /home/faat/prova-sistemas/prova-sistemas/src/historico_sessao/relatorio_sessao_2026-06-22.md <<'EOF'
+    (conteúdo do arquivo acima)
+    EOF
+
+Observações finais
+- Informe se deseja que eu gere agora os arquivos faltantes (Dockerfile atualizado, docker-compose.yml, .dockerignore, command.js, configuração Sequelize, models, migrations, controllers e seeds). Posso criar tudo no workspace seguindo os requisitos.
