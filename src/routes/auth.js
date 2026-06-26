@@ -1,11 +1,10 @@
-// This file defines the authentication routes, including the login route.
-
 const express = require('express');
-const router = express.Router();
 const authController = require('../controllers/authController');
 const { validateLogin } = require('../middlewares/auth');
 
-// Login route
+const router = express.Router();
+
 router.post('/login', validateLogin, authController.login);
+router.post('/register', authController.register);
 
 module.exports = router;

@@ -1,21 +1,13 @@
-FROM node:14 AS build
-
+FROM node:24-alpine AS deps
 WORKDIR /app
+COPY src/package*.json ./
+RUN npm ci --ignore-scripts
 
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-FROM node:14 AS production
-
-WORKDIR /app
-
-COPY --from=build /app .
-
+FROM node:24-alpine AS runtime
+WORKDIR /app/src
+ENV NODE_ENV=production
+COPY --from=deps /app/node_modules ./node_modules
+COPY src/ ./
+COPY command.js ./command.js
 EXPOSE 3000
-
-CMD ["node", "src/server.js"]
+CMD ["sh", "-c", "node command.js migrate && node command.js seed:optional && node server.js"]

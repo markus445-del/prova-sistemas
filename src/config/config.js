@@ -1,24 +1,28 @@
+const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env') });
+
+const databaseUrl = process.env.DATABASE_URL;
+
+const shared = databaseUrl
+  ? {
+      url: databaseUrl,
+      dialect: 'postgres',
+      logging: false,
+    }
+  : {
+      username: process.env.DB_USER || 'user',
+      password: process.env.DB_PASSWORD || 'password',
+      database: process.env.DB_NAME || 'prova_sistemas',
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT || 5432),
+      dialect: 'postgres',
+      logging: false,
+    };
+
 module.exports = {
-  development: {
-    username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || 'password',
-    database: process.env.DB_NAME || 'database_development',
-    host: process.env.DB_HOST || '127.0.0.1',
-    dialect: 'postgres',
-  },
-  test: {
-    username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || 'password',
-    database: process.env.DB_NAME || 'database_test',
-    host: process.env.DB_HOST || '127.0.0.1',
-    dialect: 'postgres',
-  },
-  production: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    logging: false,
-  },
+  development: shared,
+  test: shared,
+  production: shared,
 };

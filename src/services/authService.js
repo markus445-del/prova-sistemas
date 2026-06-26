@@ -1,12 +1,15 @@
 // src/services/authService.js
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { User } = require('../models');
 
+const jwtSecret = process.env.JWT_SECRET || 'dev-secret';
+const jwtExpiration = process.env.JWT_EXPIRATION || '1h';
+
 const generateToken = (user) => {
-    return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
+    return jwt.sign({ id: user.id, email: user.email }, jwtSecret, {
+        expiresIn: jwtExpiration,
     });
 };
 

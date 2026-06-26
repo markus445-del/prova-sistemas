@@ -1,19 +1,20 @@
-const express = require('express');
-const { sequelize } = require('./config/sequelize');
 const app = require('./app');
-const PORT = process.env.PORT || 3000;
+const { sequelize } = require('./models');
+
+const port = process.env.PORT || 3000;
 
 const startServer = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Database connection established successfully.');
+  try {
+    await sequelize.authenticate();
+    console.log('Banco de dados conectado.');
 
-        app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
-        });
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
+    app.listen(port, () => {
+      console.log(`Servidor Node privado ouvindo na porta ${port}.`);
+    });
+  } catch (error) {
+    console.error('Falha ao iniciar a aplicacao:', error);
+    process.exit(1);
+  }
 };
 
 startServer();

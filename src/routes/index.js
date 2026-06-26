@@ -1,15 +1,21 @@
-// This file sets up the main routes for the application.
-
-import express from 'express';
-import authRoutes from './auth.js';
-import userRoutes from './users.js';
+const express = require('express');
+const authMiddleware = require('../middlewares/auth');
+const authRoutes = require('./auth');
+const userRoutes = require('./users');
+const categoryRoutes = require('./categories');
+const ticketRoutes = require('./tickets');
+const ticketAssignmentRoutes = require('./ticketAssignments');
 
 const router = express.Router();
 
-// Use authentication routes
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'helpdesk-api' });
+});
+
 router.use('/auth', authRoutes);
+router.use('/users', authMiddleware, userRoutes);
+router.use('/categories', authMiddleware, categoryRoutes);
+router.use('/tickets', authMiddleware, ticketRoutes);
+router.use('/ticket-assignments', authMiddleware, ticketAssignmentRoutes);
 
-// Use user-related routes
-router.use('/users', userRoutes);
-
-export default router;
+module.exports = router;

@@ -1,23 +1,23 @@
-import { Sequelize } from 'sequelize';
-import config from '../config/sequelize';
-import User from './user';
-import Role from './role';
-// Import other models as needed
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
 
-const sequelize = new Sequelize(config);
+const User = require('./user')(sequelize, DataTypes);
+const Category = require('./category')(sequelize, DataTypes);
+const Ticket = require('./ticket')(sequelize, DataTypes);
+const TicketAssignment = require('./ticketAssignment')(sequelize, DataTypes);
 
 const models = {
-  User: User(sequelize),
-  Role: Role(sequelize),
-  // Add other models here
+  sequelize,
+  User,
+  Category,
+  Ticket,
+  TicketAssignment,
 };
 
-// Set up associations
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
     models[modelName].associate(models);
   }
 });
 
-export { sequelize };
-export default models;
+module.exports = models;

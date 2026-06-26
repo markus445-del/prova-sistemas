@@ -1,45 +1,49 @@
-// This file provides a CLI utility to run Sequelize migrations and seed the database.
+const { existsSync } = require('fs');
+const path = require('path');
+const { execFileSync } = require('child_process');
 
-const { exec } = require('child_process');
+const appDir = existsSync(path.join(__dirname, 'src', 'package.json'))
+  ? path.join(__dirname, 'src')
+  : __dirname;
 
-const runMigrations = () => {
-    exec('npx sequelize-cli db:migrate', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error running migrations: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.error(`Migration stderr: ${stderr}`);
-            return;
-        }
-        console.log(`Migration stdout: ${stdout}`);
-    });
-};
+const sequelizeArgs = [
+  '--config', 'config/config.js',
+  '--migrations-path', 'migrations',
+  '--seeders-path', 'seeders',
+  '--models-path', 'models',
+];
 
-const runSeeders = () => {
-    exec('npx sequelize-cli db:seed:all', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error running seeders: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.error(`Seeder stderr: ${stderr}`);
-            return;
-        }
-        console.log(`Seeder stdout: ${stdout}`);
-    });
-};
+function runSequelize(command) {
+  execFileSync('npx', ['sequelize-cli', command, ...sequelizeArgs], {
+    cwd: appDir,
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+  });
+}
 
-const main = () => {
-    const command = process.argv[2];
+function main() {
+  const command = process.argv[2];
 
-    if (command === 'migrate') {
-        runMigrations();
-    } else if (command === 'seed') {
-        runSeeders();
-    } else {
-        console.log('Usage: node command.js [migrate|seed]');
+  if (command === 'migrate') {
+    runSequelize('db:migrate');
+    return;
+  }
+
+  if (command === 'seed') {
+    runSequelize('db:seed:all');
+    return;
+  }
+
+  if (command === 'seed:optional') {
+    try {
+      runSequelize('db:seed:all');
+    } catch (error) {
+      console.log('Seed ignorado: dados iniciais provavelmente ja existem.');
     }
-};
+    return;
+  }
+
+  console.log('Uso: node command.js [migrate|seed|seed:optional]');
+}
 
 main();

@@ -1,9 +1,9 @@
 # prova-sistemas
 
 ## Overview
-`prova-sistemas` is a Node.js application that provides a backend infrastructure for managing users, projects, and tasks. It utilizes Express for the server framework, Sequelize for ORM with PostgreSQL, and includes authentication features.
+`prova-sistemas` É uma aplicação Node.js que fornece uma infraestrutura de backend para o gerenciamento de usuários, projetos e tarefas. Ela utiliza o Express como framework de servidor, o Sequelize como ORM com PostgreSQL e inclui funcionalidades de autenticação.
 
-## Project Structure
+## Estrutura do Projeto
 ```
 prova-sistemas
 ├── src
@@ -45,59 +45,59 @@ prova-sistemas
 └── README.md
 ```
 
-## Getting Started
+## Primeiros Passos
 
-### Prerequisites
-- Node.js (version 14 or higher)
+### Pré-requisitos
+- Node.js (versão 14 ou superior)
 - PostgreSQL
-- Docker (optional, for containerized setup)
+- Docker (opcional, para configuração em containers)
 
-### Installation
-1. Clone the repository:
+### Instalação
+1. Clone o repositório:
    ```
    git clone <repository-url>
    cd prova-sistemas
    ```
 
-2. Install dependencies:
+2. Instale as dependências:
    ```
    npm install
    ```
 
-3. Set up the environment variables:
-   - Copy `.env.example` to `.env` and fill in the required values.
+3. Configure as variáveis ​​de ambiente:
+   - Copie o arquivo `.env.example` para `.env` e preencha os valores necessários.
 
-### Running the Application
-To run the application locally:
+### Executando a Aplicação
+Para executar a aplicação localmente:
 ```
 npm start
 ```
 
-To run the application using Docker:
+Para executar a aplicação usando Docker:
 ```
 docker-compose up --build
 ```
 
-### Database Migrations and Seeders
-To run migrations and seed the database:
+### Migrações e Seeders do Banco de Dados
+Para executar as migrações e popular o banco de dados (seed):
 ```
 node command.js migrate
 node command.js seed
 ```
 
-### API Endpoints
-- **Authentication**
-  - `POST /api/auth/login`: Login and receive a JWT token.
+### Endpoints da API
+- **Autenticação**
+  - `POST /api/auth/login`: Realiza login e retorna um token JWT.
   
-- **Users**
-  - `GET /api/users`: Retrieve all users.
-  - `POST /api/users`: Create a new user.
-  - `GET /api/users/:id`: Retrieve a user by ID.
-  - `PUT /api/users/:id`: Update a user by ID.
-  - `DELETE /api/users/:id`: Delete a user by ID.
+- **Usuários**
+  - `GET /api/users`: Lista todos os usuários.
+  - `POST /api/users`: Cria um novo usuário.
+  - `GET /api/users/:id`: Busca um usuário pelo ID.
+  - `PUT /api/users/:id`: Atualiza um usuário pelo ID.
+  - `DELETE /api/users/:id`: Remove um usuário pelo ID.
 
-## Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+## Contribuição
+Contribuições são bem-vindas! Por favor, abra uma *issue* ou envie um *pull request* para quaisquer melhorias ou correções de bugs.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Licença
+Este projeto está licenciado sob a Licença MIT. Consulte o arquivo LICENSE para mais detalhes.

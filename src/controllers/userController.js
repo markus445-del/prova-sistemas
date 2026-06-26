@@ -1,68 +1,67 @@
-// This file contains the userController which exports CRUD functions for managing users.
-
 const { User } = require('../models');
 
-// Create a new user
-exports.createUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const newUser = await User.create({ email, password });
-        return res.status(201).json(newUser);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error creating user', error });
-    }
+const userAttributes = ['id', 'name', 'email', 'role', 'createdAt', 'updatedAt'];
+
+exports.list = async (req, res, next) => {
+  try {
+    const users = await User.findAll({ attributes: userAttributes, order: [['id', 'ASC']] });
+    return res.json(users);
+  } catch (error) {
+    return next(error);
+  }
 };
 
-// Get all users
-exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await User.findAll();
-        return res.status(200).json(users);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error fetching users', error });
+exports.get = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id, { attributes: userAttributes });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario nao encontrado.' });
     }
+
+    return res.json(user);
+  } catch (error) {
+    return next(error);
+  }
 };
 
-// Get a user by ID
-exports.getUserById = async (req, res) => {
-    try {
-        const user = await User.findByPk(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        return res.status(200).json(user);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error fetching user', error });
-    }
+exports.create = async (req, res, next) => {
+  try {
+    const user = await User.create(req.body);
+    const created = await User.findByPk(user.id, { attributes: userAttributes });
+    return res.status(201).json(created);
+  } catch (error) {
+    return next(error);
+  }
 };
 
-// Update a user by ID
-exports.updateUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findByPk(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        user.email = email || user.email;
-        user.password = password || user.password;
-        await user.save();
-        return res.status(200).json(user);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error updating user', error });
+exports.update = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario nao encontrado.' });
     }
+
+    await user.update(req.body);
+    const updated = await User.findByPk(user.id, { attributes: userAttributes });
+    return res.json(updated);
+  } catch (error) {
+    return next(error);
+  }
 };
 
-// Delete a user by ID
-exports.deleteUser = async (req, res) => {
-    try {
-        const user = await User.findByPk(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        await user.destroy();
-        return res.status(204).send();
-    } catch (error) {
-        return res.status(500).json({ message: 'Error deleting user', error });
+exports.remove = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario nao encontrado.' });
     }
+
+    await user.destroy();
+    return res.status(204).send();
+  } catch (error) {
+    return next(error);
+  }
 };

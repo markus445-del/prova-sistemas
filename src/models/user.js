@@ -1,9 +1,15 @@
+const bcrypt = require('bcryptjs');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -16,20 +22,38 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [6, 100],
-      },
+    },
+    role: {
+      type: DataTypes.ENUM('admin', 'agent', 'requester'),
+      allowNull: false,
+      defaultValue: 'requester',
     },
   }, {
+    tableName: 'users',
     hooks: {
-      beforeCreate: (user) => {
-        // Add password hashing logic here
+      beforeCreate: async (user) => {
+        user.password = await bcrypt.hash(user.password, 10);
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed('password')) {
+          user.password = await bcrypt.hash(user.password, 10);
+        }
       },
     },
   });
 
   User.associate = (models) => {
-    // Define associations here
+    User.hasMany(models.Ticket, {
+      foreignKey: 'createdById',
+      as: 'createdTickets',
+    });
+
+    User.belongsToMany(models.Ticket, {
+      through: models.TicketAssignment,
+      foreignKey: 'userId',
+      otherKey: 'ticketId',
+      as: 'assignedTickets',
+    });
   };
 
   return User;
